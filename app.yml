@@ -49,6 +49,13 @@ spec:
                   name: elixir-args
                   key: secret_key_base
 
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: elixir-args
+                  key: sentry_dsn
+                  optional: true
+
             # Postgres creds come from the StackGres-managed auth secret
             # (named after the SGCluster in pg.yml). runtime.exs reads
             # these directly — no URL composition — so passwords with

@@ -84,6 +84,14 @@ config :logger, :default_formatter,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Sentry error reporting. The DSN is set in runtime.exs from the
+# SENTRY_DSN environment variable (read out of the elixir-args secret in
+# app.yml). When the DSN is empty, Sentry quietly no-ops.
+config :sentry,
+  enable_source_code_context: true,
+  root_source_code_paths: [File.cwd!()],
+  environment_name: Mix.env()
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

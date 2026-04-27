@@ -76,6 +76,13 @@ if config_env() == :prod do
 
   config :diogramos, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
+  # Sentry: only emits when DSN is non-empty, so the secret can be left
+  # blank in environments where reporting is off.
+  config :sentry,
+    dsn: System.get_env("SENTRY_DSN"),
+    environment_name: :prod,
+    release: System.get_env("APP_VERSION") || System.get_env("CI_COMMIT_SHA")
+
   config :diogramos, DiogramosWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     http: [

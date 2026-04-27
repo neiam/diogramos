@@ -7,6 +7,11 @@ defmodule Diogramos.Application do
 
   @impl true
   def start(_type, _args) do
+    # Forward warnings + errors to Sentry. No-ops when SENTRY_DSN is unset.
+    :logger.add_handler(:sentry_handler, Sentry.LoggerHandler, %{
+      config: %{metadata: [:file, :line]}
+    })
+
     children = [
       DiogramosWeb.Telemetry,
       Diogramos.Repo,
