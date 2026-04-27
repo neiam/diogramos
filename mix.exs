@@ -85,6 +85,11 @@ defmodule Diogramos.MixProject do
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["compile", "tailwind diogramos", "esbuild diogramos"],
       "assets.deploy": [
+        # Compile must run before esbuild so Phoenix LiveView 1.1 has a
+        # chance to emit colocated hooks under
+        # `_build/$MIX_ENV/lib/<app>/priv/static/phoenix-colocated/<app>`,
+        # which `assets/js/app.js` imports as `phoenix-colocated/diogramos`.
+        "compile",
         "tailwind diogramos --minify",
         "esbuild diogramos --minify",
         "phx.digest"
