@@ -85,6 +85,11 @@ if config_env() == :prod do
 
   config :diogramos, DiogramosWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
+    # Accept both http and https origins for the configured host. The
+    # `//host` form matches any scheme/port. Without this the LiveView
+    # WebSocket upgrade is rejected silently when the proxy forwards a
+    # subtly-different Origin header (no Logger event, nothing in Sentry).
+    check_origin: ["//#{host}", "https://#{host}"],
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
