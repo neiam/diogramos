@@ -1,0 +1,368 @@
+/* See the Tailwind configuration guide for advanced usage
+   https://tailwindcss.com/docs/configuration */
+
+/* B612 + B612 Mono — used by the canvas editor's text-element font picker. */
+@import url("https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&family=B612+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+@import "tailwindcss" source(none);
+@source "../css";
+@source "../js";
+@source "../../lib/diogramos_web";
+
+/* A Tailwind plugin that makes "hero-#{ICON}" classes available.
+   The heroicons installation itself is managed by your mix.exs */
+@plugin "../vendor/heroicons";
+
+/* daisyUI Tailwind Plugin. You can update this file by fetching the latest version with:
+   curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js
+   Make sure to look at the daisyUI changelog: https://daisyui.com/docs/changelog/ */
+@plugin "../vendor/daisyui" {
+  themes: false;
+}
+
+/* daisyUI theme plugin. You can update this file by fetching the latest version with:
+  curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js
+  We ship with two themes, a light one inspired on Phoenix colors and a dark one inspired
+  on Elixir colors. Build your own at: https://daisyui.com/theme-generator/ */
+@plugin "../vendor/daisyui-theme" {
+  name: "dark";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(30.33% 0.016 252.42);
+  --color-base-200: oklch(25.26% 0.014 253.1);
+  --color-base-300: oklch(20.15% 0.012 254.09);
+  --color-base-content: oklch(97.807% 0.029 256.847);
+  --color-primary: oklch(58% 0.233 277.117);
+  --color-primary-content: oklch(96% 0.018 272.314);
+  --color-secondary: oklch(58% 0.233 277.117);
+  --color-secondary-content: oklch(96% 0.018 272.314);
+  --color-accent: oklch(60% 0.25 292.717);
+  --color-accent-content: oklch(96% 0.016 293.756);
+  --color-neutral: oklch(37% 0.044 257.287);
+  --color-neutral-content: oklch(98% 0.003 247.858);
+  --color-info: oklch(58% 0.158 241.966);
+  --color-info-content: oklch(97% 0.013 236.62);
+  --color-success: oklch(60% 0.118 184.704);
+  --color-success-content: oklch(98% 0.014 180.72);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(58% 0.253 17.585);
+  --color-error-content: oklch(96% 0.015 12.422);
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "../vendor/daisyui-theme" {
+  name: "light";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(98% 0 0);
+  --color-base-200: oklch(96% 0.001 286.375);
+  --color-base-300: oklch(92% 0.004 286.32);
+  --color-base-content: oklch(21% 0.006 285.885);
+  --color-primary: oklch(70% 0.213 47.604);
+  --color-primary-content: oklch(98% 0.016 73.684);
+  --color-secondary: oklch(55% 0.027 264.364);
+  --color-secondary-content: oklch(98% 0.002 247.839);
+  --color-accent: oklch(0% 0 0);
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: oklch(44% 0.017 285.786);
+  --color-neutral-content: oklch(98% 0 0);
+  --color-info: oklch(62% 0.214 259.815);
+  --color-info-content: oklch(97% 0.014 254.604);
+  --color-success: oklch(70% 0.14 182.503);
+  --color-success-content: oklch(98% 0.014 180.72);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(58% 0.253 17.585);
+  --color-error-content: oklch(96% 0.015 12.422);
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 0;
+}
+
+/* ── neiam-co themes ────────────────────────────────────────────────────────
+   Ported from /home/gmorell/Development/projects/neiam-co/sass/main.scss.
+   Each [data-theme="..."] block there becomes a daisyUI theme plugin entry.
+   neiam-co exposes --base-* / --primary etc as raw vars; we add the daisyUI
+   --color- prefix and synthesize the *-content variants for info/success/
+   warning/error (neiam-co didn't define them, so we pin them to a dark
+   foreground that contrasts with the light pastels). */
+
+@plugin "../vendor/daisyui-theme" {
+  name: "her";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(35% 0.104 24);
+  --color-base-200: oklch(30% 0.104 24);
+  --color-base-300: oklch(25% 0.104 24);
+  --color-base-content: oklch(98% 0.050 24);
+  --color-primary: oklch(64% 0.076 19);
+  --color-primary-content: oklch(10% 0.010 19);
+  --color-secondary: oklch(78% 0.049 18);
+  --color-secondary-content: oklch(10% 0.010 18);
+  --color-accent: oklch(96% 0.058 96);
+  --color-accent-content: oklch(10% 0.010 96);
+  --color-neutral: oklch(43% 0.103 22);
+  --color-neutral-content: oklch(98% 0.010 22);
+  --color-info: oklch(83% 0.101 230);
+  --color-info-content: oklch(15% 0.05 230);
+  --color-success: oklch(90% 0.089 164);
+  --color-success-content: oklch(15% 0.05 164);
+  --color-warning: oklch(95% 0.124 102);
+  --color-warning-content: oklch(15% 0.05 102);
+  --color-error: oklch(81% 0.103 20);
+  --color-error-content: oklch(15% 0.05 20);
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "../vendor/daisyui-theme" {
+  name: "afterdark";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(29% 0.122 277);
+  --color-base-200: oklch(24% 0.122 277);
+  --color-base-300: oklch(19% 0.122 277);
+  --color-base-content: oklch(98% 0.050 277);
+  --color-primary: oklch(60% 0.090 285);
+  --color-primary-content: oklch(10% 0.010 285);
+  --color-secondary: oklch(76% 0.060 286);
+  --color-secondary-content: oklch(10% 0.010 286);
+  --color-accent: oklch(96% 0.058 96);
+  --color-accent-content: oklch(10% 0.010 96);
+  --color-neutral: oklch(38% 0.121 281);
+  --color-neutral-content: oklch(98% 0.010 281);
+  --color-info: oklch(83% 0.101 230);
+  --color-info-content: oklch(15% 0.05 230);
+  --color-success: oklch(90% 0.089 164);
+  --color-success-content: oklch(15% 0.05 164);
+  --color-warning: oklch(95% 0.124 102);
+  --color-warning-content: oklch(15% 0.05 102);
+  --color-error: oklch(81% 0.103 20);
+  --color-error-content: oklch(15% 0.05 20);
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "../vendor/daisyui-theme" {
+  name: "forest";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(27% 0.063 153);
+  --color-base-200: oklch(22% 0.063 153);
+  --color-base-300: oklch(17% 0.063 153);
+  --color-base-content: oklch(98% 0.050 153);
+  --color-primary: oklch(80% 0.182 152);
+  --color-primary-content: oklch(10% 0.010 152);
+  --color-secondary: oklch(87% 0.136 154);
+  --color-secondary-content: oklch(10% 0.010 154);
+  --color-accent: oklch(96% 0.058 96);
+  --color-accent-content: oklch(10% 0.010 96);
+  --color-neutral: oklch(45% 0.108 151);
+  --color-neutral-content: oklch(98% 0.010 151);
+  --color-info: oklch(83% 0.101 230);
+  --color-info-content: oklch(15% 0.05 230);
+  --color-success: oklch(90% 0.089 164);
+  --color-success-content: oklch(15% 0.05 164);
+  --color-warning: oklch(95% 0.124 102);
+  --color-warning-content: oklch(15% 0.05 102);
+  --color-error: oklch(81% 0.103 20);
+  --color-error-content: oklch(15% 0.05 20);
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "../vendor/daisyui-theme" {
+  name: "sky";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(29% 0.063 243);
+  --color-base-200: oklch(24% 0.063 243);
+  --color-base-300: oklch(19% 0.063 243);
+  --color-base-content: oklch(98% 0.050 243);
+  --color-primary: oklch(75% 0.139 233);
+  --color-primary-content: oklch(10% 0.010 233);
+  --color-secondary: oklch(83% 0.101 230);
+  --color-secondary-content: oklch(10% 0.010 230);
+  --color-accent: oklch(96% 0.058 96);
+  --color-accent-content: oklch(10% 0.010 96);
+  --color-neutral: oklch(39% 0.085 241);
+  --color-neutral-content: oklch(98% 0.010 241);
+  --color-info: oklch(83% 0.101 230);
+  --color-info-content: oklch(15% 0.05 230);
+  --color-success: oklch(90% 0.089 164);
+  --color-success-content: oklch(15% 0.05 164);
+  --color-warning: oklch(95% 0.124 102);
+  --color-warning-content: oklch(15% 0.05 102);
+  --color-error: oklch(81% 0.103 20);
+  --color-error-content: oklch(15% 0.05 20);
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "../vendor/daisyui-theme" {
+  name: "clays";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(28% 0.074 46);
+  --color-base-200: oklch(23% 0.074 46);
+  --color-base-300: oklch(18% 0.074 46);
+  --color-base-content: oklch(98% 0.050 46);
+  --color-primary: oklch(67% 0.157 58);
+  --color-primary-content: oklch(10% 0.010 58);
+  --color-secondary: oklch(77% 0.165 70);
+  --color-secondary-content: oklch(10% 0.010 70);
+  --color-accent: oklch(96% 0.058 96);
+  --color-accent-content: oklch(10% 0.010 96);
+  --color-neutral: oklch(47% 0.125 46);
+  --color-neutral-content: oklch(98% 0.010 46);
+  --color-info: oklch(83% 0.101 230);
+  --color-info-content: oklch(15% 0.05 230);
+  --color-success: oklch(90% 0.089 164);
+  --color-success-content: oklch(15% 0.05 164);
+  --color-warning: oklch(95% 0.124 102);
+  --color-warning-content: oklch(15% 0.05 102);
+  --color-error: oklch(81% 0.103 20);
+  --color-error-content: oklch(15% 0.05 20);
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "../vendor/daisyui-theme" {
+  name: "stones";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(27% 0.006 34);
+  --color-base-200: oklch(22% 0.006 34);
+  --color-base-300: oklch(17% 0.006 34);
+  --color-base-content: oklch(98% 0.050 34);
+  --color-primary: oklch(55% 0.023 264);
+  --color-primary-content: oklch(10% 0.010 264);
+  --color-secondary: oklch(71% 0.019 261);
+  --color-secondary-content: oklch(10% 0.010 261);
+  --color-accent: oklch(96% 0.058 96);
+  --color-accent-content: oklch(10% 0.010 96);
+  --color-neutral: oklch(44% 0.010 74);
+  --color-neutral-content: oklch(98% 0.010 74);
+  --color-info: oklch(83% 0.101 230);
+  --color-info-content: oklch(15% 0.05 230);
+  --color-success: oklch(90% 0.089 164);
+  --color-success-content: oklch(15% 0.05 164);
+  --color-warning: oklch(95% 0.124 102);
+  --color-warning-content: oklch(15% 0.05 102);
+  --color-error: oklch(81% 0.103 20);
+  --color-error-content: oklch(15% 0.05 20);
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+/* ── "blueprint" theme ────────────────────────────────────────────────────────
+   Drafted from the navy + cyan range in cbz-clients.svg
+   (#00274d / #003466 / #003970 / #004285 / #0068cc / #3399ff / #99cdff /
+   #cce6ff). Accent reuses the yellow shared by the neiam-co themes so
+   callouts pop against the deep paper-blue surfaces, like a real
+   blueprint annotation. */
+
+@plugin "../vendor/daisyui-theme" {
+  name: "blueprint";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(28% 0.12 252);
+  --color-base-200: oklch(24% 0.11 252);
+  --color-base-300: oklch(20% 0.10 252);
+  --color-base-content: oklch(91% 0.05 235);
+  --color-primary: oklch(68% 0.18 248);
+  --color-primary-content: oklch(15% 0.05 248);
+  --color-secondary: oklch(82% 0.10 240);
+  --color-secondary-content: oklch(15% 0.05 240);
+  --color-accent: oklch(96% 0.058 96);
+  --color-accent-content: oklch(10% 0.010 96);
+  --color-neutral: oklch(40% 0.16 253);
+  --color-neutral-content: oklch(91% 0.05 235);
+  --color-info: oklch(83% 0.101 230);
+  --color-info-content: oklch(15% 0.05 230);
+  --color-success: oklch(90% 0.089 164);
+  --color-success-content: oklch(15% 0.05 164);
+  --color-warning: oklch(95% 0.124 102);
+  --color-warning-content: oklch(15% 0.05 102);
+  --color-error: oklch(81% 0.103 20);
+  --color-error-content: oklch(15% 0.05 20);
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+/* Add variants based on LiveView classes */
+@custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
+@custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
+@custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
+
+/* Use the data attribute for dark mode  */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Make LiveView wrapper divs transparent for layout */
+[data-phx-session], [data-phx-teleported-src] { display: contents }
+
+/* This file is for your main application CSS */

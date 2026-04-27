@@ -1,0 +1,152 @@
+<Layouts.app flash={@flash} current_scope={@current_scope} wide>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-20 sm:py-28 text-center">
+      <p class="font-mono text-xs uppercase tracking-[0.25em] text-accent mb-4">Diogramos</p>
+      <h1 class="text-4xl sm:text-6xl font-bold tracking-tight">
+        Diagrams, drawn together.
+      </h1>
+      <p class="text-base-content/70 text-lg sm:text-xl mt-6 max-w-2xl mx-auto leading-relaxed">
+        A multiplayer canvas for boxes, circles, text, and connectors.
+        Sketch a system live with your team, embed a read-only view in a doc,
+        export to Mermaid for the changelog.
+      </p>
+      <div class="flex justify-center gap-3 mt-8">
+        <%= if @current_scope && @current_scope.user do %>
+          <.link navigate={~p"/canvases"} class="btn btn-primary">
+            <.icon name="hero-rectangle-stack-micro" class="size-4" /> Open canvases
+          </.link>
+        <% else %>
+          <%= if Diogramos.Accounts.registration_open?() do %>
+            <.link navigate={~p"/users/register"} class="btn btn-primary">Get started</.link>
+          <% else %>
+            <span class="btn btn-disabled" title="Registration is invite-only">
+              Get started · invite-only
+            </span>
+          <% end %>
+          <.link navigate={~p"/users/log-in"} class="btn btn-ghost">Log in</.link>
+        <% end %>
+      </div>
+    </section>
+
+    <section class="py-12 sm:py-16">
+      <h2 class="text-2xl sm:text-3xl font-bold mb-2">What you get</h2>
+      <p class="text-base-content/70 mb-8">
+        Everything you need for fast, sharable diagrams. No installs, no lock-in.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="border border-base-300 rounded-box p-5 bg-base-200">
+          <div class="flex items-center gap-2 mb-2">
+            <.icon name="hero-cursor-arrow-rays-micro" class="size-5 text-accent" />
+            <h3 class="font-semibold">Live multiplayer</h3>
+          </div>
+          <p class="text-sm text-base-content/80">
+            Cursors, selections, and edits stream to every collaborator. The first
+            person to grab a shape locks it; everyone else sees it ghosted while it moves.
+          </p>
+        </div>
+
+        <div class="border border-base-300 rounded-box p-5 bg-base-200">
+          <div class="flex items-center gap-2 mb-2">
+            <.icon name="hero-swatch-micro" class="size-5 text-accent" />
+            <h3 class="font-semibold">Themes that travel</h3>
+          </div>
+          <p class="text-sm text-base-content/80">
+            Pick from nine OKLCH themes — the canvas, the SVG, and the embed all
+            inherit the same palette so screenshots stay on-brand.
+          </p>
+        </div>
+
+        <div class="border border-base-300 rounded-box p-5 bg-base-200">
+          <div class="flex items-center gap-2 mb-2">
+            <.icon name="hero-arrow-long-right-micro" class="size-5 text-accent" />
+            <h3 class="font-semibold">Connectors that route</h3>
+          </div>
+          <p class="text-sm text-base-content/80">
+            Straight, orthogonal, or curved. Configurable end-spacing, line width,
+            tick pattern, and start/end arrows — copy/paste a connector style across the diagram.
+          </p>
+        </div>
+
+        <div class="border border-base-300 rounded-box p-5 bg-base-200">
+          <div class="flex items-center gap-2 mb-2">
+            <.icon name="hero-link-micro" class="size-5 text-accent" />
+            <h3 class="font-semibold">Embeddable & linkable</h3>
+          </div>
+          <p class="text-sm text-base-content/80">
+            Toggle a public embed link to drop the diagram into any page. Each
+            shape can carry one or more icon links to external URLs or to other canvases.
+          </p>
+        </div>
+
+        <div class="border border-base-300 rounded-box p-5 bg-base-200">
+          <div class="flex items-center gap-2 mb-2">
+            <.icon name="hero-arrow-down-tray-micro" class="size-5 text-accent" />
+            <h3 class="font-semibold">Export anywhere</h3>
+          </div>
+          <p class="text-sm text-base-content/80">
+            One click to download as Mermaid (paste into your README) or full
+            JSON (re-import into another canvas). No vendor lock-in.
+          </p>
+        </div>
+
+        <div class="border border-base-300 rounded-box p-5 bg-base-200">
+          <div class="flex items-center gap-2 mb-2">
+            <.icon name="hero-squares-2x2-micro" class="size-5 text-accent" />
+            <h3 class="font-semibold">Snap, fit, organize</h3>
+          </div>
+          <p class="text-sm text-base-content/80">
+            Per-canvas grid that remembers your preference. Fit-to-canvas
+            shortcut. Folders + per-folder permissions. Anonymous share links
+            for one-off collaborators.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-12 sm:py-16">
+      <h2 class="text-2xl sm:text-3xl font-bold mb-2">Get started in three steps</h2>
+      <p class="text-base-content/70 mb-8">
+        From "make an account" to "shipped a diagram" in under two minutes.
+      </p>
+
+      <ol class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <li class="border border-base-300 rounded-box p-5 bg-base-200 flex flex-col gap-2">
+          <span class="font-mono text-xs text-accent">01</span>
+          <h3 class="font-semibold">Create an account</h3>
+          <p class="text-sm text-base-content/80">
+            <%= if Diogramos.Accounts.registration_open?() do %>
+              Sign up with an email — magic-link login keeps it passwordless.
+            <% else %>
+              Diogramos is invite-only right now. Ping a member for an invite link, then sign up.
+            <% end %>
+          </p>
+        </li>
+        <li class="border border-base-300 rounded-box p-5 bg-base-200 flex flex-col gap-2">
+          <span class="font-mono text-xs text-accent">02</span>
+          <h3 class="font-semibold">Draw something</h3>
+          <p class="text-sm text-base-content/80">
+            Pick a shape from the toolbar (or hit Ctrl-1, Ctrl-2…), drag to draw,
+            wire shapes together with the connector tool. Your edits stream live to anyone watching.
+          </p>
+        </li>
+        <li class="border border-base-300 rounded-box p-5 bg-base-200 flex flex-col gap-2">
+          <span class="font-mono text-xs text-accent">03</span>
+          <h3 class="font-semibold">Share it</h3>
+          <p class="text-sm text-base-content/80">
+            Toggle "Embed" to get a public iframe URL, copy a share link to invite a
+            collaborator (no account required), or download the diagram as Mermaid or JSON.
+          </p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="py-12 sm:py-16 text-center">
+      <h2 class="text-2xl sm:text-3xl font-bold mb-2">Built on Phoenix LiveView</h2>
+      <p class="text-base-content/70 max-w-2xl mx-auto">
+        Server-authoritative document, GenServer-per-canvas, Phoenix.PubSub for ops
+        and Phoenix.Presence for cursors. Open source, runs anywhere Elixir does.
+      </p>
+    </section>
+  </div>
+</Layouts.app>
