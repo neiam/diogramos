@@ -35,3 +35,7 @@ diogramos-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Populated secret manifests — only the *.example.yml templates are tracked.
+app-secrets.yml
+*.secret.yml
+

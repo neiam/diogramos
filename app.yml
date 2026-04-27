@@ -28,30 +28,47 @@ spec:
         name: diogramos
     spec:
       containers:
-        - image: r.g.gmp.io/diogramos/diogramos:latest
+        - image: r.g.gmp.io/neiam/diogramos:latest
           imagePullPolicy: Always
           name: diogramos
           ports:
             - containerPort: 4000
           env:
             - name: PHX_HOST
-              value: diogramos.gmp.io
+              value: diogramos.neiam.co
             - name: PORT
               value: "4000"
             - name: PHX_SERVER
               value: "true"
+            - name: POOL_SIZE
+              value: "10"
+
             - name: SECRET_KEY_BASE
               valueFrom:
                 secretKeyRef:
                   name: elixir-args
                   key: secret_key_base
-            - name: DATABASE_URL
+
+            # Postgres creds come from the StackGres-managed auth secret
+            # (named after the SGCluster in pg.yml). runtime.exs reads
+            # these directly — no URL composition — so passwords with
+            # special characters don't get mangled by URL parsing.
+            - name: POSTGRES_HOST
+              value: postgres
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: diogramos
+            - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: elixir-args
-                  key: database_url
-            - name: POOL_SIZE
-              value: "10"
+                  name: postgres
+                  key: superuser-username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: superuser-password
           readinessProbe:
             httpGet:
               path: /
@@ -91,10 +108,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - diogramos.gmp.io
+        - diogramos.neiam.co
       secretName: diogramos-tls
   rules:
-    - host: diogramos.gmp.io
+    - host: diogramos.neiam.co
       http:
         paths:
           - path: /
