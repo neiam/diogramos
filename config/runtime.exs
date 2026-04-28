@@ -76,6 +76,23 @@ if config_env() == :prod do
 
   config :diogramos, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
+  # libcluster — Kubernetes endpoints lookup against the headless
+  # service we deploy alongside the app. RBAC (pods + endpoints) is
+  # granted to the `diogramos` ServiceAccount in app.yml.
+  config :libcluster,
+    topologies: [
+      diogramos: [
+        strategy: Cluster.Strategy.Kubernetes,
+        config: [
+          mode: :ip,
+          kubernetes_service_name: "diogramos-headless",
+          kubernetes_node_basename: "diogramos",
+          kubernetes_namespace: "diogramos",
+          polling_interval: 10_000
+        ]
+      ]
+    ]
+
   # Sentry: only emits when DSN is non-empty, so the secret can be left
   # blank in environments where reporting is off.
   config :sentry,

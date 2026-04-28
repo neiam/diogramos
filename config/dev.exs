@@ -11,9 +11,6 @@ config :diogramos, Diogramos.Repo,
   pool_size: 10,
   port: 54329
 
-# No clustering in local dev.
-config :libcluster, topologies: []
-
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
