@@ -5,9 +5,12 @@ defmodule DiogramosWeb.Endpoint do
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
+  # Bump the `key` (or `signing_salt`) to silently invalidate every
+  # cookie minted by an earlier deploy — useful after rotating
+  # secret_key_base or moving from dev → prod.
   @session_options [
     store: :cookie,
-    key: "_diogramos_key",
+    key: "_diogramos_key_v2",
     signing_salt: "dapkIR0G",
     same_site: "Lax"
   ]

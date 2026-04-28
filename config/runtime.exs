@@ -83,6 +83,29 @@ if config_env() == :prod do
     environment_name: :prod,
     release: System.get_env("APP_VERSION") || System.get_env("CI_COMMIT_SHA")
 
+  # Mailer adapter selection:
+  #
+  #   * MAILGUN_API_KEY + MAILGUN_DOMAIN  → Swoosh.Adapters.Mailgun
+  #   * otherwise                          → Swoosh.Adapters.Logger
+  #
+  # The Logger adapter doesn't actually send mail — it logs the
+  # rendered email at :info — but it gets us off Swoosh.Adapters.Local,
+  # which is what the login page checks for to show the dev-mailbox
+  # banner. Wire up a real provider when you're ready to receive
+  # confirmation links again.
+  mailer_opts =
+    if System.get_env("MAILGUN_API_KEY") && System.get_env("MAILGUN_DOMAIN") do
+      [
+        adapter: Swoosh.Adapters.Mailgun,
+        api_key: System.get_env("MAILGUN_API_KEY"),
+        domain: System.get_env("MAILGUN_DOMAIN")
+      ]
+    else
+      [adapter: Swoosh.Adapters.Logger, level: :info]
+    end
+
+  config :diogramos, Diogramos.Mailer, mailer_opts
+
   config :diogramos, DiogramosWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     # Accept both http and https origins for the configured host. The
