@@ -39,7 +39,7 @@ defmodule Diogramos.Diagrams.Authority do
   """
   @spec for_canvas(integer()) :: {:ok, pid()} | {:error, term()}
   def for_canvas(canvas_id) when is_integer(canvas_id) do
-    case Registry.lookup(@registry, canvas_id) do
+    case Horde.Registry.lookup(@registry, canvas_id) do
       [{pid, _}] -> {:ok, pid}
       [] -> start_authority(canvas_id)
     end
@@ -70,7 +70,7 @@ defmodule Diogramos.Diagrams.Authority do
   delete. Persists current state before exit.
   """
   def stop(canvas_id) do
-    case Registry.lookup(@registry, canvas_id) do
+    case Horde.Registry.lookup(@registry, canvas_id) do
       [{pid, _}] -> GenServer.stop(pid, :normal)
       [] -> :ok
     end
@@ -89,8 +89,13 @@ defmodule Diogramos.Diagrams.Authority do
   def start_link(_opts \\ []) do
     Supervisor.start_link(
       [
-        {Registry, keys: :unique, name: @registry},
-        {DynamicSupervisor, strategy: :one_for_one, name: @supervisor}
+        {Horde.Registry, keys: :unique, name: @registry, members: :auto},
+        {Horde.DynamicSupervisor,
+         strategy: :one_for_one,
+         name: @supervisor,
+         distribution_strategy: Horde.UniformDistribution,
+         members: :auto,
+         process_redistribution: :active}
       ],
       strategy: :one_for_all,
       name: __MODULE__.Supervisor
@@ -99,7 +104,7 @@ defmodule Diogramos.Diagrams.Authority do
 
   defp start_authority(canvas_id) do
     spec = {__MODULE__.Server, canvas_id}
-    DynamicSupervisor.start_child(@supervisor, spec)
+    Horde.DynamicSupervisor.start_child(@supervisor, spec)
   end
 
   ## Server module ---------------------------------------------------------
@@ -112,7 +117,7 @@ defmodule Diogramos.Diagrams.Authority do
 
     def start_link(canvas_id) do
       GenServer.start_link(__MODULE__, canvas_id,
-        name: {:via, Registry, {Authority.registry(), canvas_id}}
+        name: {:via, Horde.Registry, {Authority.registry(), canvas_id}}
       )
     end
 

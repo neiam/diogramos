@@ -43,6 +43,21 @@ spec:
             - name: POOL_SIZE
               value: "10"
 
+            # Cluster glue: every pod becomes diogramos@<pod-ip>, joins
+            # via DNS query against the headless service below, and
+            # shares Authority registry state through Horde.
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: DNS_CLUSTER_QUERY
+              value: diogramos-headless.diogramos.svc.cluster.local
+            - name: RELEASE_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: elixir-args
+                  key: erlang_cookie
+
             - name: SECRET_KEY_BASE
               valueFrom:
                 secretKeyRef:
@@ -104,6 +119,35 @@ spec:
   selector:
     name: diogramos
 ---
+# Headless service so dns_cluster can resolve all pod IPs for clustering.
+# Pods discover siblings via SRV/A records on this name; epmd-less long-
+# name distribution does the actual node connection.
+apiVersion: v1
+kind: Service
+metadata:
+  name: diogramos-headless
+  namespace: diogramos
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - port: 4000
+      targetPort: 4000
+      protocol: TCP
+      name: http
+  selector:
+    name: diogramos
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+  namespace: diogramos
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -112,6 +156,11 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/ingress.class: "traefik"
+    # Listen on both Traefik entrypoints. The middleware below redirects
+    # http → https for the `web` (port 80) entrypoint, so the app itself
+    # never has to issue a 301 (which broke the LiveView WS handshake).
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: diogramos-redirect-https@kubernetescrd
 spec:
   tls:
     - hosts:

@@ -68,7 +68,8 @@ defmodule Diogramos.MixProject do
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
       {:sentry, "~> 10.0"},
-      {:hackney, "~> 1.20"}
+      {:hackney, "~> 1.20"},
+      {:horde, "~> 0.9.0"}
     ]
   end
 
