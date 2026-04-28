@@ -19,7 +19,7 @@ metadata:
   namespace: diogramos
 rules:
   - apiGroups: [""]
-    resources: ["pods"]
+    resources: ["pods", "endpoints"]
     verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1

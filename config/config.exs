@@ -102,8 +102,12 @@ config :libcluster,
       strategy: Cluster.Strategy.Kubernetes,
       config: [
         mode: :ip,
+        # Default :endpoints lookup. Pairs with the diogramos-headless
+        # Service in app.yml — Kubernetes builds the Endpoints object
+        # automatically from that service's selector, so we just point
+        # libcluster at the service name.
+        kubernetes_service_name: "diogramos-headless",
         kubernetes_node_basename: "diogramos",
-        kubernetes_selector: "name=diogramos",
         kubernetes_namespace: "diogramos",
         polling_interval: 10_000
       ]
