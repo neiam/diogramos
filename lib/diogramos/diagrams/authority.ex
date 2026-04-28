@@ -89,13 +89,9 @@ defmodule Diogramos.Diagrams.Authority do
   def start_link(_opts \\ []) do
     Supervisor.start_link(
       [
-        {Horde.Registry, keys: :unique, name: @registry, members: :auto},
+        {Horde.Registry, [keys: :unique, name: @registry, members: :auto]},
         {Horde.DynamicSupervisor,
-         strategy: :one_for_one,
-         name: @supervisor,
-         distribution_strategy: Horde.UniformDistribution,
-         members: :auto,
-         process_redistribution: :active}
+         [strategy: :one_for_one, name: @supervisor, members: :auto]}
       ],
       strategy: :one_for_all,
       name: __MODULE__.Supervisor
