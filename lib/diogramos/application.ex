@@ -12,15 +12,20 @@ defmodule Diogramos.Application do
       config: %{metadata: [:file, :line]}
     })
 
-    children = [
-      DiogramosWeb.Telemetry,
-      Diogramos.Repo,
-      {DNSCluster, query: Application.get_env(:diogramos, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: Diogramos.PubSub},
-      Diogramos.Diagrams.Authority,
-      DiogramosWeb.Presence,
-      DiogramosWeb.Endpoint
-    ]
+    topologies = Application.get_env(:libcluster, :topologies, [])
+
+    children =
+      [
+        DiogramosWeb.Telemetry,
+        Diogramos.Repo
+      ] ++
+        cluster_children(topologies) ++
+        [
+          {Phoenix.PubSub, name: Diogramos.PubSub},
+          Diogramos.Diagrams.Authority,
+          DiogramosWeb.Presence,
+          DiogramosWeb.Endpoint
+        ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
@@ -34,5 +39,11 @@ defmodule Diogramos.Application do
   def config_change(changed, _new, removed) do
     DiogramosWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp cluster_children([]), do: []
+
+  defp cluster_children(topologies) do
+    [{Cluster.Supervisor, [topologies, [name: Diogramos.ClusterSupervisor]]}]
   end
 end

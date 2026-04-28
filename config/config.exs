@@ -92,6 +92,24 @@ config :sentry,
   root_source_code_paths: [File.cwd!()],
   environment_name: Mix.env()
 
+# libcluster — uses the Kubernetes plugin to find peer pods via the API
+# and form an Erlang cluster. RBAC for the diogramos ServiceAccount is
+# defined in app.yml. In dev/test the topology is empty, so no clustering
+# happens locally.
+config :libcluster,
+  topologies: [
+    diogramos: [
+      strategy: Cluster.Strategy.Kubernetes,
+      config: [
+        mode: :ip,
+        kubernetes_node_basename: "diogramos",
+        kubernetes_selector: "name=diogramos",
+        kubernetes_namespace: "diogramos",
+        polling_interval: 10_000
+      ]
+    ]
+  ]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

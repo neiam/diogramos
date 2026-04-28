@@ -3,6 +3,39 @@ kind: Namespace
 metadata:
   name: diogramos
 ---
+# RBAC for libcluster's Kubernetes strategy. The ServiceAccount on the
+# pod gets read-only access to its own namespace's pods so it can
+# discover peer node IPs.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: diogramos
+  namespace: diogramos
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: diogramos-pod-reader
+  namespace: diogramos
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: diogramos-pod-reader
+  namespace: diogramos
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: diogramos-pod-reader
+subjects:
+  - kind: ServiceAccount
+    name: diogramos
+    namespace: diogramos
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,6 +60,7 @@ spec:
       labels:
         name: diogramos
     spec:
+      serviceAccountName: diogramos
       containers:
         - image: r.g.gmp.io/neiam/diogramos:latest
           imagePullPolicy: Always
@@ -43,15 +77,14 @@ spec:
             - name: POOL_SIZE
               value: "10"
 
-            # Cluster glue: every pod becomes diogramos@<pod-ip>, joins
-            # via DNS query against the headless service below, and
-            # shares Authority registry state through Horde.
+            # Cluster glue: every pod becomes diogramos@<pod-ip>.
+            # libcluster (Cluster.Strategy.Kubernetes) discovers peers
+            # via the K8s API (RBAC defined above) and Horde rides on
+            # top to keep the Authority registry coherent.
             - name: POD_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
-            - name: DNS_CLUSTER_QUERY
-              value: diogramos-headless.diogramos.svc.cluster.local
             - name: RELEASE_COOKIE
               valueFrom:
                 secretKeyRef:

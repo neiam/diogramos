@@ -69,7 +69,8 @@ defmodule Diogramos.MixProject do
       {:bandit, "~> 1.5"},
       {:sentry, "~> 10.0"},
       {:hackney, "~> 1.20"},
-      {:horde, "~> 0.9.0"}
+      {:horde, "~> 0.9.0"},
+      {:libcluster, "~> 3.4"}
     ]
   end
 

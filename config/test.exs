@@ -29,6 +29,9 @@ config :diogramos, DiogramosWeb.Endpoint,
 # flow flip this back via Application.put_env/3 and then restore it.
 config :diogramos, :registration_open, true
 
+# Disable libcluster in test — we don't try to talk to the k8s API.
+config :libcluster, topologies: []
+
 # In test we don't send emails
 config :diogramos, Diogramos.Mailer, adapter: Swoosh.Adapters.Test
 
