@@ -85,6 +85,9 @@ if config_env() == :prod do
         strategy: Cluster.Strategy.Kubernetes,
         config: [
           mode: :ip,
+          # Both keys are required by libcluster 3.5 even in :endpoints
+          # lookup mode — it filters endpoints by selector.
+          kubernetes_selector: "name=diogramos",
           kubernetes_service_name: "diogramos-headless",
           kubernetes_node_basename: "diogramos",
           kubernetes_namespace: "diogramos",
