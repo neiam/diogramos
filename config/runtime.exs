@@ -130,6 +130,12 @@ if config_env() == :prod do
         tls: smtp_tri.("SMTP_TLS", "if_available"),
         ssl: System.get_env("SMTP_SSL", "false") == "true",
         auth: smtp_tri.("SMTP_AUTH", "if_available"),
+        tls_options: [
+          verify: :verify_peer,
+          cacerts: :public_key.cacerts_get(),
+          server_name_indication: String.to_charlist(relay),
+          depth: 99
+        ],
         retries: 1,
         no_mx_lookups: false
       ]
