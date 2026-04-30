@@ -1899,7 +1899,7 @@ defmodule DiogramosWeb.CanvasLive.Edit do
     if enabled == [] do
       ~H""
     else
-      assigns = assign(assigns, :placements, link_placements(element, enabled))
+      assigns = assign(assigns, :placements, link_placements(element, enabled, :editor))
 
       ~H"""
       <%= for %{link: link, x: x, y: y, size: size, href: href, icon: icon} <- @placements do %>
@@ -1937,7 +1937,7 @@ defmodule DiogramosWeb.CanvasLive.Edit do
   bottom-right corner of the element's bbox toward the left so the
   "primary" (first) link is closest to the corner.
   """
-  def link_placements(element, enabled_links) do
+  def link_placements(element, enabled_links, context \\ :embed) do
     {origin_x, origin_y, size} = link_overlay_geometry(element)
     gap = 2
 
@@ -1946,7 +1946,7 @@ defmodule DiogramosWeb.CanvasLive.Edit do
     |> Enum.map(fn {link, i} ->
       %{
         link: link,
-        href: link_href(link),
+        href: link_href(link, context),
         icon: link_icon_id(link["icon"]),
         x: origin_x - i * (size + gap),
         y: origin_y,
@@ -1978,11 +1978,18 @@ defmodule DiogramosWeb.CanvasLive.Edit do
   def link_icon_id(name), do: "dx-link-icon-#{name || "link"}"
 
   @doc false
-  def link_href(%{"kind" => "canvas", "target" => slug}) when is_binary(slug) and slug != "",
-    do: "/c-embed/#{slug}"
+  def link_href(link, context \\ :embed)
 
-  def link_href(%{"target" => target}) when is_binary(target), do: target
-  def link_href(_), do: "#"
+  def link_href(%{"kind" => "canvas", "target" => slug}, :editor)
+      when is_binary(slug) and slug != "",
+      do: "/c/#{slug}"
+
+  def link_href(%{"kind" => "canvas", "target" => slug}, _context)
+      when is_binary(slug) and slug != "",
+      do: "/c-embed/#{slug}"
+
+  def link_href(%{"target" => target}, _context) when is_binary(target), do: target
+  def link_href(_, _context), do: "#"
 
   attr :element, :map, required: true
   attr :element_id, :string, required: true

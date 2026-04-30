@@ -53,7 +53,10 @@ config :diogramos, DiogramosWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :diogramos, Diogramos.Mailer, adapter: Swoosh.Adapters.Local
+config :diogramos, Diogramos.Mailer,
+  adapter: Swoosh.Adapters.Local,
+  from_name: "Diogramos",
+  from_address: "noreply@localhost"
 
 # Configure esbuild (the version is required)
 config :esbuild,

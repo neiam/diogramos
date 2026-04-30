@@ -105,26 +105,43 @@ if config_env() == :prod do
 
   # Mailer adapter selection:
   #
-  #   * MAILGUN_API_KEY + MAILGUN_DOMAIN  → Swoosh.Adapters.Mailgun
-  #   * otherwise                          → Swoosh.Adapters.Logger
+  #   * SMTP_RELAY set  → Swoosh.Adapters.SMTP (gen_smtp)
+  #   * otherwise       → Swoosh.Adapters.Logger
   #
   # The Logger adapter doesn't actually send mail — it logs the
   # rendered email at :info — but it gets us off Swoosh.Adapters.Local,
   # which is what the login page checks for to show the dev-mailbox
-  # banner. Wire up a real provider when you're ready to receive
-  # confirmation links again.
+  # banner.
+  smtp_tri = fn var, default ->
+    case System.get_env(var, default) do
+      v when v in ~w(always if_available never) -> String.to_existing_atom(v)
+      other -> raise "#{var} must be one of always|if_available|never, got: #{inspect(other)}"
+    end
+  end
+
   mailer_opts =
-    if System.get_env("MAILGUN_API_KEY") && System.get_env("MAILGUN_DOMAIN") do
+    if relay = System.get_env("SMTP_RELAY") do
       [
-        adapter: Swoosh.Adapters.Mailgun,
-        api_key: System.get_env("MAILGUN_API_KEY"),
-        domain: System.get_env("MAILGUN_DOMAIN")
+        adapter: Swoosh.Adapters.SMTP,
+        relay: relay,
+        port: String.to_integer(System.get_env("SMTP_PORT", "587")),
+        username: System.get_env("SMTP_USERNAME"),
+        password: System.get_env("SMTP_PASSWORD"),
+        tls: smtp_tri.("SMTP_TLS", "if_available"),
+        ssl: System.get_env("SMTP_SSL", "false") == "true",
+        auth: smtp_tri.("SMTP_AUTH", "if_available"),
+        retries: 1,
+        no_mx_lookups: false
       ]
     else
       [adapter: Swoosh.Adapters.Logger, level: :info]
     end
 
   config :diogramos, Diogramos.Mailer, mailer_opts
+
+  config :diogramos, Diogramos.Mailer,
+    from_name: System.get_env("MAIL_FROM_NAME", "Diogramos"),
+    from_address: System.get_env("MAIL_FROM_ADDRESS") || "noreply@#{host}"
 
   config :diogramos, DiogramosWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],

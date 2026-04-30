@@ -493,7 +493,7 @@ defmodule DiogramosWeb.CanvasLive.Embed do
         assign(
           assigns,
           :placements,
-          DiogramosWeb.CanvasLive.Edit.link_placements(element, enabled)
+          DiogramosWeb.CanvasLive.Edit.link_placements(element, enabled, :embed)
         )
 
       ~H"""

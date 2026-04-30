@@ -6,10 +6,14 @@ defmodule Diogramos.Accounts.UserNotifier do
 
   # Delivers the email using the application mailer.
   defp deliver(recipient, subject, body) do
+    mailer_config = Application.get_env(:diogramos, Mailer, [])
+    from_name = Keyword.get(mailer_config, :from_name, "Diogramos")
+    from_address = Keyword.get(mailer_config, :from_address, "noreply@localhost")
+
     email =
       new()
       |> to(recipient)
-      |> from({"Diogramos", "contact@example.com"})
+      |> from({from_name, from_address})
       |> subject(subject)
       |> text_body(body)
 
