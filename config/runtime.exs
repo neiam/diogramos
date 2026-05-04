@@ -186,7 +186,7 @@ if config_env() == :prod do
   #
   # `:keyfile` and `:certfile` expect an absolute path to the key
   # and cert in disk or a relative path inside priv, for example
-  # "priv/ssl/server.key". For all supported SSL configuration
+  # "priv/ssl/server.key". For a l l supported SSL configuration
   # options, see https://hexdocs.pm/plug/Plug.SSL.html#configure/1
   #
   # We also recommend setting `force_ssl` in your config/prod.exs,
