@@ -12,15 +12,15 @@ import Config
 # If you use `mix release`, you need to explicitly enable the server
 # by passing the PHX_SERVER=true when you start it:
 #
-#     PHX_SERVER=true bin/muddle start
+#     PHX_SERVER=true bin/diogramos start
 #
 # Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
 # script that automatically sets the env var above.
 if System.get_env("PHX_SERVER") do
-  config :muddle, MuddleWeb.Endpoint, server: true
+  config :diogramos, DiogramosWeb.Endpoint, server: true
 end
 
-config :muddle, MuddleWeb.Endpoint,
+config :diogramos, DiogramosWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("PORT", "4000"))]
 
 if config_env() == :prod do
@@ -33,7 +33,7 @@ if config_env() == :prod do
   # DATABASE_URL when those aren't present.
   cond do
     System.get_env("POSTGRES_HOST") ->
-      config :muddle, Muddle.Repo,
+      config :diogramos, Diogramos.Repo,
         hostname: System.get_env("POSTGRES_HOST"),
         port: String.to_integer(System.get_env("POSTGRES_PORT") || "5432"),
         username:
@@ -42,12 +42,12 @@ if config_env() == :prod do
         password:
           System.get_env("POSTGRES_PASSWORD") ||
             raise("POSTGRES_PASSWORD is required when POSTGRES_HOST is set"),
-        database: System.get_env("POSTGRES_DB") || "muddle",
+        database: System.get_env("POSTGRES_DB") || "diogramos",
         pool_size: pool_size,
         socket_options: maybe_ipv6
 
     System.get_env("DATABASE_URL") ->
-      config :muddle, Muddle.Repo,
+      config :diogramos, Diogramos.Repo,
         url: System.get_env("DATABASE_URL"),
         pool_size: pool_size,
         socket_options: maybe_ipv6
@@ -74,23 +74,23 @@ if config_env() == :prod do
 
   host = System.get_env("PHX_HOST") || "example.com"
 
-  config :muddle, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
+  config :diogramos, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   # libcluster — Kubernetes endpoints lookup against the headless
   # service we deploy alongside the app. RBAC (pods + endpoints) is
-  # granted to the `muddle` ServiceAccount in app.yml.
+  # granted to the `diogramos` ServiceAccount in app.yml.
   config :libcluster,
     topologies: [
-      muddle: [
+      diogramos: [
         strategy: Cluster.Strategy.Kubernetes,
         config: [
           mode: :ip,
           # Both keys are required by libcluster 3.5 even in :endpoints
           # lookup mode — it filters endpoints by selector.
-          kubernetes_selector: "name=muddle",
-          kubernetes_service_name: "muddle-headless",
-          kubernetes_node_basename: "muddle",
-          kubernetes_namespace: "muddle",
+          kubernetes_selector: "name=diogramos",
+          kubernetes_service_name: "diogramos-headless",
+          kubernetes_node_basename: "diogramos",
+          kubernetes_namespace: "diogramos",
           polling_interval: 10_000
         ]
       ]
@@ -143,13 +143,13 @@ if config_env() == :prod do
       [adapter: Swoosh.Adapters.Logger, level: :info]
     end
 
-  config :muddle, Muddle.Mailer, mailer_opts
+  config :diogramos, Diogramos.Mailer, mailer_opts
 
-  config :muddle, Muddle.Mailer,
-    from_name: System.get_env("MAIL_FROM_NAME", "Muddle"),
+  config :diogramos, Diogramos.Mailer,
+    from_name: System.get_env("MAIL_FROM_NAME", "Diogramos"),
     from_address: System.get_env("MAIL_FROM_ADDRESS") || "noreply@#{host}"
 
-  config :muddle, MuddleWeb.Endpoint,
+  config :diogramos, DiogramosWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     # Accept both http and https origins for the configured host. The
     # `//host` form matches any scheme/port. Without this the LiveView
@@ -170,7 +170,7 @@ if config_env() == :prod do
   # To get SSL working, you will need to add the `https` key
   # to your endpoint configuration:
   #
-  #     config :muddle, MuddleWeb.Endpoint,
+  #     config :diogramos, DiogramosWeb.Endpoint,
   #       https: [
   #         ...,
   #         port: 443,
@@ -186,13 +186,13 @@ if config_env() == :prod do
   #
   # `:keyfile` and `:certfile` expect an absolute path to the key
   # and cert in disk or a relative path inside priv, for example
-  # "priv/ssl/server.key". For a l l supported SSL configuration
+  # "priv/ssl/server.key". For all supported SSL configuration
   # options, see https://hexdocs.pm/plug/Plug.SSL.html#configure/1
   #
   # We also recommend setting `force_ssl` in your config/prod.exs,
   # ensuring no data is ever sent via http, always redirecting to https:
   #
-  #     config :muddle, MuddleWeb.Endpoint,
+  #     config :diogramos, DiogramosWeb.Endpoint,
   #       force_ssl: [hsts: true]
   #
   # Check `Plug.SSL` for all available options in `force_ssl`.
@@ -202,7 +202,7 @@ if config_env() == :prod do
   # In production you need to configure the mailer to use a different adapter.
   # Here is an example configuration for Mailgun:
   #
-  #     config :muddle, Muddle.Mailer,
+  #     config :diogramos, Diogramos.Mailer,
   #       adapter: Swoosh.Adapters.Mailgun,
   #       api_key: System.get_env("MAILGUN_API_KEY"),
   #       domain: System.get_env("MAILGUN_DOMAIN")
