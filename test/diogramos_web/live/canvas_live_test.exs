@@ -802,7 +802,10 @@ defmodule DiogramosWeb.CanvasLiveTest do
 
       html = render(lv)
       assert html =~ ~s(href="https://elixir-lang.org")
-      assert html =~ ~s(href="/c-embed/another-canvas")
+      # The editor renders canvas links with the :editor context (link_href/2),
+      # which points at the canvas editor (/c/<slug>); /c-embed/<slug> is only
+      # used in the read-only embed view.
+      assert html =~ ~s(href="/c/another-canvas")
       assert html =~ "dx-link-icon-globe-alt"
       assert html =~ "dx-link-icon-link"
     end
