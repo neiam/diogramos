@@ -4,9 +4,12 @@
 #   - https://hub.docker.com/r/hexpm/elixir/tags
 #   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bookworm
 #
+# NOTE: OTP must be >= 27.3.3. Earlier 27.x releases (incl. 27.2) reject the
+# Let's Encrypt / ISRG "Root YR" cross-signed chain now served by hex.pm with a
+# TLS "key_usage_mismatch" error, breaking `mix local.hex` / `mix deps.get`.
 ARG ELIXIR_VERSION=1.17.3
-ARG OTP_VERSION=27.2
-ARG DEBIAN_VERSION=bookworm-20241223-slim
+ARG OTP_VERSION=27.3.4.11
+ARG DEBIAN_VERSION=bookworm-20260610-slim
 
 ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
 ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
