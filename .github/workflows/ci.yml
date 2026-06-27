@@ -24,8 +24,10 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+        # config/test.exs connects on 54329 (matches compose.yml), so publish
+        # the service container's 5432 on that host port.
         ports:
-          - 5432:5432
+          - 54329:5432
         options: >-
           --health-cmd "pg_isready -U postgres"
           --health-interval 5s

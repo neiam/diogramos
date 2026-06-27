@@ -160,6 +160,12 @@ kind: Service
 metadata:
   name: diogramos-headless
   namespace: diogramos
+  # Labels here propagate to the Endpoints object. libcluster's K8s
+  # strategy filters endpoints by labelSelector (not by service name),
+  # so without `name: diogramos` here the Endpoints have no matching
+  # label and discovery silently returns zero peers.
+  labels:
+    name: diogramos
 spec:
   clusterIP: None
   publishNotReadyAddresses: true
